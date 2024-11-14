@@ -1,13 +1,13 @@
 import express from "express";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 import Hall from "./models/Hall.js";
 import Booking from "./models/Booking.js";
 import cors from "cors";
+import authRoutes from "./routes/auth.js";
+import protect from "./middleware/auth.js";
 const app = express();
 
-app.use(bodyParser.json());
-
+app.use(express.json());
 app.use(cors());
 
 const mongoURI = process.env.MONGODB_URI;
@@ -23,6 +23,9 @@ const connectDB = async () => {
 
 // Call the function to connect to the database
 connectDB();
+
+// Add auth routes
+app.use("/api/auth", authRoutes);
 
 // Get all halls with populated bookings
 app.get("/api/halls", async (req, res) => {
@@ -49,7 +52,7 @@ app.get("/api/bookings/:hallId", async (req, res) => {
   }
 });
 // Create a new hall
-app.post("/api/halls", async (req, res) => {
+app.post("/api/halls", protect, async (req, res) => {
   const { name } = req.body;
 
   try {
@@ -65,7 +68,7 @@ app.post("/api/halls", async (req, res) => {
 });
 
 // Create a new booking and add it to the hall's booking list
-app.post("/api/bookings", async (req, res) => {
+app.post("/api/bookings", protect, async (req, res) => {
   const { hallId, date, user } = req.body;
   try {
     const booking = new Booking({ hallId, date, user });
