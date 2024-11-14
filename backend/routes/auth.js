@@ -15,20 +15,14 @@ router.post("/register", async (req, res) => {
 
     const user = new User({ username, password });
     await user.save();
-
-
-
-
-
-
     const token = generateToken(user._id);
 
     // Set JWT token in cookies
     res.cookie("token", token, {
-      httpOnly: true,    // Makes the cookie accessible only by the server
+      httpOnly: true, // Makes the cookie accessible only by the server
       secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
-      maxAge: 3600000,   // Set cookie expiration time (1 hour)
-      sameSite: "strict" // Protect against CSRF attacks
+      maxAge: 3600000, // Set cookie expiration time (1 hour)
+      sameSite: "strict", // Protect against CSRF attacks
     });
 
     res.status(201).json({ message: "User registered successfully" });
@@ -50,10 +44,10 @@ router.post("/login", async (req, res) => {
 
     // Set JWT token in cookies
     res.cookie("token", token, {
-      httpOnly: true,    // Makes the cookie accessible only by the server
+      httpOnly: true, // Makes the cookie accessible only by the server
       secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
-      maxAge: 3600000,   // Set cookie expiration time (1 hour)
-      sameSite: "strict" // Protect against CSRF attacks
+      maxAge: 3600000, // Set cookie expiration time (1 hour)
+      sameSite: "strict", // Protect against CSRF attacks
     });
 
     res.json({ message: "User logged in successfully" });
