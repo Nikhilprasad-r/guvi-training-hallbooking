@@ -8,9 +8,18 @@ import protect from "./middleware/auth.js";
 import cookieParser from "cookie-parser";
 const app = express();
 
+
+const corsOptions = {
+  origin: "http://localhost:5173",  // Your frontend URL (adjust if necessary)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,  // Allow cookies to be sent and received
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 
 const mongoURI = process.env.MONGODB_URI;
 

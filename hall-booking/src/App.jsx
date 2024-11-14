@@ -1,24 +1,48 @@
-import  { useState } from 'react';
-import HallList from './components/HallList';
-import DatePicker from './components/DatePicker';
-import BookingForm from './components/BookingForm';
+import { useState } from 'react';
+import Login from './components/Login';
+import Register from './components/Register';
+import Dashboard from './components/Dashboard'; 
 
 function App() {
-  const [selectedHall, setSelectedHall] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-console.log(import.meta.env.VITE_BACKEND)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLogin, setShowLogin] = useState(true); // Toggle between Login and Register components
+
+  // Callback functions to handle login and register success
+  const handleLoginSuccess = () => setIsAuthenticated(true);
+  const handleRegisterSuccess = () => setIsAuthenticated(true);
+
+  // Toggle between Login and Register forms
+  const toggleAuthForm = () => setShowLogin((prev) => !prev);
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Hall Booking System</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <HallList onSelectHall={setSelectedHall} />
-        {selectedHall && (
-          <DatePicker hall={selectedHall} onDateSelect={setSelectedDate} />
-        )}
-        {selectedHall && selectedDate && (
-          <BookingForm hall={selectedHall} date={selectedDate} />
-        )}
-      </div>
+      {isAuthenticated ? (
+        <Dashboard /> // Show the dashboard if authenticated
+      ) : (
+        <div className="auth-container">
+          {showLogin ? (
+            <>
+              <Login onLogin={handleLoginSuccess} />
+              <p>
+                Don't have an account?{' '}
+                <button onClick={toggleAuthForm} className="text-blue-500">
+                  Register here
+                </button>
+              </p>
+            </>
+          ) : (
+            <>
+              <Register onRegister={handleRegisterSuccess} />
+              <p>
+                Already have an account?{' '}
+                <button onClick={toggleAuthForm} className="text-blue-500">
+                  Login here
+                </button>
+              </p>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

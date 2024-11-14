@@ -1,16 +1,26 @@
-import { useState } from "react";
-import { handleLogin } from "../services/api";
+import { useState } from 'react';
+import { handleLogin } from '../services/api';
 
-function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function Login({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const message = await handleLogin(username, password);
+    if (message === "User logged in successfully") {
+      onLogin(); // Trigger authentication in MainApp
+    } else {
+      setError(message);
+    }
+  };
 
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleLogin(username,password)}>
+      {error && <p className="text-red-500">{error}</p>}
+      <form onSubmit={onSubmit}>
         <input
           type="text"
           placeholder="Username"

@@ -1,16 +1,26 @@
-import { useState } from "react";
-import { handleRegister } from "../services/api";
+import { useState } from 'react';
+import { handleRegister } from '../services/api';
 
-function Register() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function Register({ onRegister }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const message = await handleRegister(username, password);
+    if (message === "User registered successfully") {
+      onRegister(); // Trigger authentication in MainApp
+    } else {
+      setError(message);
+    }
+  };
 
   return (
     <div>
       <h2>Register</h2>
-      <form onSubmit={handleRegister(username,password)}>
+      {error && <p className="text-red-500">{error}</p>}
+      <form onSubmit={onSubmit}>
         <input
           type="text"
           placeholder="Username"
