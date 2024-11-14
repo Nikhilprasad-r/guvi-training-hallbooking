@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import HallList from './components/HallList';
 import DatePicker from './components/DatePicker';
 import BookingForm from './components/BookingForm';

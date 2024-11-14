@@ -1,6 +1,7 @@
 import express from "express";
-import { generateToken } from "../utils/jwt.js";
 import User from "../models/User.js";
+import { generateToken } from "../utils/jwt.js";
+
 const router = express.Router();
 
 // Register a new user
@@ -14,8 +15,23 @@ router.post("/register", async (req, res) => {
 
     const user = new User({ username, password });
     await user.save();
+
+
+
+
+
+
     const token = generateToken(user._id);
-    res.status(201).json({ token });
+
+    // Set JWT token in cookies
+    res.cookie("token", token, {
+      httpOnly: true,    // Makes the cookie accessible only by the server
+      secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
+      maxAge: 3600000,   // Set cookie expiration time (1 hour)
+      sameSite: "strict" // Protect against CSRF attacks
+    });
+
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error registering user" });
   }
@@ -31,7 +47,16 @@ router.post("/login", async (req, res) => {
     }
 
     const token = generateToken(user._id);
-    res.json({ token });
+
+    // Set JWT token in cookies
+    res.cookie("token", token, {
+      httpOnly: true,    // Makes the cookie accessible only by the server
+      secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
+      maxAge: 3600000,   // Set cookie expiration time (1 hour)
+      sameSite: "strict" // Protect against CSRF attacks
+    });
+
+    res.json({ message: "User logged in successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error logging in" });
   }

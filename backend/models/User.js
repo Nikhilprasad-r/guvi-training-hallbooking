@@ -3,8 +3,6 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
-  name: { type: String },
-  phone: { type: String },
   password: { type: String, required: true },
 });
 
@@ -14,6 +12,7 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
 
 userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
