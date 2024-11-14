@@ -22,31 +22,31 @@ function HallList({ onSelectHall }) {
   };
 
   return (
-    <div className="p-4 border rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Select a Hall</h2>
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-sm mx-auto">
+      <h2 className="text-xl font-semibold text-center mb-6">Select a Hall</h2>
       <ul className="space-y-2">
         {halls.map((hall) => (
           <li key={hall._id}>
             <button
               onClick={() => onSelectHall(hall)}
-              className="w-full text-left p-2 border rounded hover:bg-gray-200"
+              className="w-full text-left p-3 border rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               {hall.name}
             </button>
           </li>
         ))}
       </ul>
-      <div className="mt-4 flex">
+      <div className="mt-6 flex">
         <input
           type="text"
           value={newHall}
           onChange={(e) => setNewHall(e.target.value)}
           placeholder="Add new hall"
-          className="border p-2 flex-1 rounded-l"
+          className="border border-gray-300 p-3 rounded-l-md flex-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <button
           onClick={handleAddHall}
-          className="bg-blue-500 text-white p-2 rounded-r"
+          className="bg-blue-600 text-white p-3 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           Add
         </button>
