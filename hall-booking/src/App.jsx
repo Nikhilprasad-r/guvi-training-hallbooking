@@ -31,7 +31,7 @@ function App() {
             <>
               <Login onLogin={handleLoginSuccess} />
               <p>
-                Don&pos;t have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <button onClick={toggleAuthForm} className="text-blue-500">
                   Register here
                 </button>
