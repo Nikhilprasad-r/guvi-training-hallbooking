@@ -18,7 +18,7 @@ router.post("/register", async (req, res) => {
     const token = generateToken(user._id);
 
     // Set JWT token in cookies
-    res.cookie("token", token, {
+    res.cookie("authtoken", token, {
       httpOnly: true, // Makes the cookie accessible only by the server
       secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
       maxAge: 3600000, // Set cookie expiration time (1 hour)
@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
     const token = generateToken(user._id);
 
     // Set JWT token in cookies
-    res.cookie("token", token, {
+    res.cookie("authtoken", token, {
       httpOnly: true, // Makes the cookie accessible only by the server
       secure: process.env.NODE_ENV === "production", // Only send cookie over HTTPS in production
       maxAge: 3600000, // Set cookie expiration time (1 hour)
