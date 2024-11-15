@@ -48,7 +48,7 @@ hallRoutes.post("/halls",protect, async (req, res) => {
 });
 
 // Create a new booking and add it to the hall's booking list
-hallRoutes.post("/bookings", protect,authorize("admin"), async (req, res) => {
+hallRoutes.post("/bookings", protect,authorize("admin","user"), async (req, res) => {
   const { hallId, date, user } = req.body;
   try {
     const booking = new Booking({ hallId, date, user });
