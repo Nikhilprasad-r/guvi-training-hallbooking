@@ -1,11 +1,10 @@
-// Role-based authorization middleware
 const authorize = (...roles) => {
   return (req, res, next) => {
-    if (!req.user) {
+    if (!req.userDetails) {
       return res.status(401).json({ message: "Not authenticated" });
     }
 
-    const userRole = req.user.role; // Assuming `role` is a property in your JWT payload
+    const userRole = req.userDetails.role; 
     if (!roles.includes(userRole)) {
       return res
         .status(403)

@@ -5,6 +5,7 @@ import Hall from "../models/Hall.js"
 import Booking from "../models/Booking.js"
 import protect from "../middleware/auth.js";
 import connectDB from "../utils/connectDB.js";
+import authorize from "../middleware/authorize.js";
 
 // Get all halls with populated bookings
 hallRoutes.get("/halls", async (req, res) => {
@@ -47,7 +48,7 @@ hallRoutes.post("/halls",protect, async (req, res) => {
 });
 
 // Create a new booking and add it to the hall's booking list
-hallRoutes.post("/bookings", protect, async (req, res) => {
+hallRoutes.post("/bookings", protect,authorize("admin"), async (req, res) => {
   const { hallId, date, user } = req.body;
   try {
     const booking = new Booking({ hallId, date, user });
