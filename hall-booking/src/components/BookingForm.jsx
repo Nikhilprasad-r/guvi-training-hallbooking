@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { createBooking } from '../services/api';
 
-function BookingForm({ hall, date }) {
+function BookingForm({ hall, date,onSelectHall }) {
   const [user, setUser] = useState({ name: '', phone: '' });
 
   const handleBooking = async () => {
     await createBooking(hall._id, date, user);
     alert('Booking successful!');
     setUser({ name: '', phone: '' });
+    onSelectHall("")
   };
 
   return (

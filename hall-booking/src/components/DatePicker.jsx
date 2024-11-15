@@ -30,7 +30,7 @@ function DatePicker({ hall, onDateSelect }) {
 
   return (
     <div className="p-4 border rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Pick a Date</h2>
+      <h2 className="text-lg font-semibold mb-4">Pick a Date to book {hall.name}</h2>
       <div className="grid grid-cols-5 gap-2">
         {dates.map((date) => {
           const booking = bookedDates.find((b) => b.date === date.toDateString());

@@ -13,9 +13,9 @@ function Dashboard() {
         <HallList onSelectHall={setSelectedHall} />
         {selectedHall && (
           <DatePicker hall={selectedHall} onDateSelect={setSelectedDate} />
-        )}
-        {selectedHall && selectedDate && (
-          <BookingForm hall={selectedHall} date={selectedDate} />
+        )} 
+        {selectedHall && selectedDate && ( 
+          <BookingForm hall={selectedHall} date={selectedDate} onSelectHall={setSelectedHall} />
         )}
       </div>
     </div>
