@@ -56,9 +56,9 @@ export async function handleRegister(username, password) {
       { username, password },
       { withCredentials: true }
     ); // Allows cookies to be sent and set
-    return response.data.message;
+    return response.data;
   } catch (error) {
-    return error.response?.data.message || "Error registering user";
+    return error.response?.data;
   }
 }
 
@@ -69,8 +69,8 @@ export async function handleLogin(username, password) {
       { username, password },
       { withCredentials: true }
     ); // Allows cookies to be sent and set
-    return response.data.message;
+    return response.data;
   } catch (error) {
-    return error.response?.data.message || "Error logging in";
+    return error.response?.data;
   }
 }

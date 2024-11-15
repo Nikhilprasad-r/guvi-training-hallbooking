@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { fetchHalls, createHall } from '../services/api';
+import React, { useEffect, useState } from "react";
+import { fetchHalls, createHall } from "../services/api";
 
-function HallList({ onSelectHall }) {
+function HallList({ onSelectHall, role }) {
   const [halls, setHalls] = useState([]);
-  const [newHall, setNewHall] = useState('');
+  const [newHall, setNewHall] = useState("");
 
   useEffect(() => {
     async function loadHalls() {
@@ -17,12 +17,12 @@ function HallList({ onSelectHall }) {
     if (newHall) {
       const hall = await createHall(newHall);
       setHalls([...halls, hall]);
-      setNewHall('');
+      setNewHall("");
     }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-sm mx-auto">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-sm mx-auto w-full">
       <h2 className="text-xl font-semibold text-center mb-6">Select a Hall</h2>
       <ul className="space-y-2">
         {halls.map((hall) => (
@@ -36,21 +36,23 @@ function HallList({ onSelectHall }) {
           </li>
         ))}
       </ul>
-      <div className="mt-6 flex">
-        <input
-          type="text"
-          value={newHall}
-          onChange={(e) => setNewHall(e.target.value)}
-          placeholder="Add new hall"
-          className="border border-gray-300 p-3 rounded-l-md flex-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <button
-          onClick={handleAddHall}
-          className="bg-blue-600 text-white p-3 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          Add
-        </button>
-      </div>
+      {role === "admin" && (
+        <div className="mt-6 flex">
+          <input
+            type="text"
+            value={newHall}
+            onChange={(e) => setNewHall(e.target.value)}
+            placeholder="Add new hall"
+            className="border border-gray-300 p-3 rounded-l-md flex-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            onClick={handleAddHall}
+            className="bg-blue-600 text-white p-3 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            Add
+          </button>
+        </div>
+      )}
     </div>
   );
 }
