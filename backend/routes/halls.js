@@ -3,7 +3,7 @@ import express from "express";
 const hallRoutes = express.Router();
 import Hall from "../models/Hall.js"
 import Booking from "../models/Booking.js"
-import protect from "../middleware/auth.js";
+import protect from "../middleware/authenticate.js";
 import connectDB from "../utils/connectDB.js";
 import authorize from "../middleware/authorize.js";
 
