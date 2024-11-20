@@ -8,11 +8,11 @@ function Login({ onLogin }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const message = await handleLogin(username, password);
-    if (message === "User logged in successfully") {
-      onLogin(); // Trigger authentication in MainApp
+    const resp = await handleLogin(username, password);
+    if (resp.message === "User logged in successfully") {
+      onLogin(resp.user);
     } else {
-      setError(message);
+      setError(resp.message);
     }
   };
 

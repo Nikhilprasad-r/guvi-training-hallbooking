@@ -1,9 +1,12 @@
 import axios from "axios";
 const backend = import.meta.env.VITE_BACKEND;
 
-export async function fetchHalls() {
+export async function fetchHalls(pageno, itemsperpage, searchText) {
   try {
-    const response = await axios.get(`${backend}/api/halls`, { withCredentials: true });
+    const response = await axios.get(
+      `${backend}/api/halls/${pageno}/${itemsperpage}?search=${searchText}`,
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching halls:", error);
@@ -27,7 +30,9 @@ export async function createHall(name) {
 
 export async function fetchBookings(hallId) {
   try {
-    const response = await axios.get(`${backend}/api/bookings/${hallId}`, { withCredentials: true });
+    const response = await axios.get(`${backend}/api/bookings/${hallId}`, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching bookings:", error);
@@ -56,9 +61,9 @@ export async function handleRegister(username, password) {
       { username, password },
       { withCredentials: true }
     ); // Allows cookies to be sent and set
-    return response.data.message;
+    return response.data;
   } catch (error) {
-    return error.response?.data.message || "Error registering user";
+    return error.response?.data;
   }
 }
 
@@ -69,8 +74,8 @@ export async function handleLogin(username, password) {
       { username, password },
       { withCredentials: true }
     ); // Allows cookies to be sent and set
-    return response.data.message;
+    return response.data;
   } catch (error) {
-    return error.response?.data.message || "Error logging in";
+    return error.response?.data;
   }
 }

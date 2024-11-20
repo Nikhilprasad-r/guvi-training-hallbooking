@@ -1,22 +1,27 @@
 import { verifyToken } from "../utils/jwt.js";
+import User from "../models/User.js";
+import connectDB from "../utils/connectDB.js";
 
 // Protect middleware
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   const token = req.cookies?.authtoken;
   if (!token) {
     return res.status(401).json({ message: "No token, authorization denied" });
   }
 
   try {
-    // Verify the token using the JWT secret
+    // Verify the token
     const decoded = verifyToken(token);
-    req.user = decoded.id; // Store the decoded user ID in req.user for future middleware access
-    console.log("Token successfully verified. User ID:", req.user);
+    req.user = decoded.id;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    req.userDetails = user;
     next();
   } catch (error) {
     console.error("Token verification failed:", error.message);
     res.status(401).json({ message: "Token is not valid" });
   }
 };
-
 export default protect;

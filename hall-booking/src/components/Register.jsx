@@ -8,11 +8,11 @@ function Register({ onRegister }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const message = await handleRegister(username, password);
-    if (message === "User registered successfully") {
-      onRegister(); // Trigger authentication in MainApp
+    const resp = await handleRegister(username, password);
+    if (resp.message === "User registered successfully") {
+      onRegister(resp.user); // Trigger authentication in MainApp
     } else {
-      setError(message);
+      setError(resp.message);
     }
   };
 
