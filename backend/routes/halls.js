@@ -9,29 +9,29 @@ import authorize from "../middleware/authorize.js";
 // Get all halls with populated bookings
 hallRoutes.get("/halls/:pageNumber/:itemsPerPage", async (req, res) => {
   try {
-    console.log(res.params)
-    const pageNumber = parseInt(req.params.pageNumber) || 1;
-    const noOfItems = parseInt(req.params.itemsPerPage) || 5;
-    const itemsToSkip = (pageNumber - 1) *noOfItems ;
-
+    const { search } = req.query;
+    const { pageNumber, itemsPerPage } = req.params;
+    const page = parseInt(pageNumber) || 1;
+    const noOfItems = parseInt(itemsPerPage) || 5;
+    const itemsToSkip = (pageNumber - 1) * noOfItems;
+    // const query = search ? { name: { $regex: search, $options: "i" } } : {};// string based search no indexing required and partial search can be done
+    const query = search ? { $text: { $search: search } } : {}; //index based search will not work if not indexed
     const [halls, totalCount] = await Promise.all([
-      Hall.find()
+      Hall.find(query)
         .populate({
           path: "bookings",
           populate: { path: "hallId", select: "name" },
         })
         .skip(itemsToSkip)
         .limit(noOfItems),
-      Hall.estimatedDocumentCount(),
+      Hall.countDocuments(query),
     ]);
-
-    // console.log(halls);
     res.json({
-      currentPageNo: pageNumber,
+      currentPageNo: page,
       pageSize: noOfItems,
       totalCount: totalCount,
       items: halls,
-      totalNoOfPages:Math.ceil (totalCount / noOfItems),
+      totalNoOfPages: Math.ceil(totalCount / noOfItems),
     });
   } catch (error) {
     console.error("Error fetching halls:", error);
@@ -50,7 +50,7 @@ hallRoutes.get("/bookings/:hallId", async (req, res) => {
   }
 });
 // Create a new hall
-hallRoutes.post("/halls", protect, async (req, res) => {
+hallRoutes.post("/halls", async (req, res) => {
   const { name } = req.body;
 
   try {
