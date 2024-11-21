@@ -3,7 +3,8 @@ import BookingForm from "./BookingForm";
 import DatePicker from "./DatePicker";
 import HallList from "./HallList";
 import BookingDetails from "./BookingDetails";
-function Dashboard({ role }) {
+import Messaging from "./Messaging";
+function Dashboard({ role, handleLogout }) {
   const [selectedHall, setSelectedHall] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null); // Track selected booking
@@ -11,6 +12,15 @@ function Dashboard({ role }) {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Hall Booking System</h1>
+      <Messaging/>
+      <button
+        className="rounded-xl text-red-500 px-4 py-6 border-2 border-black"
+        onClick={() => {
+          handleLogout();
+        }}
+      >
+        logout
+      </button>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <HallList onSelectHall={setSelectedHall} role={role} />
         {selectedHall && (

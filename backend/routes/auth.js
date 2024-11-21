@@ -22,14 +22,20 @@ router.post("/register", async (req, res) => {
     const token = generateToken({ id: user._id, role: user.role });
 
     // Set JWT token in cookies
-    res.cookie("authtoken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000, // 1 hour
-      sameSite: "strict",
-    });
+    // res.cookie("authtoken", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   maxAge: 3600000, // 1 hour
+    //   sameSite: "strict",
+    // });
 
-    res.status(201).json({ message: "User registered successfully", user: { id: user._id, role: user.role } });
+    res.header("Acess-Control-Expose-Header", "Authorization");
+    res.header("Authorization", `Bearer ${token}`);
+
+    res.status(201).json({
+      message: "User registered successfully",
+      user: { id: user._id, role: user.role },
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -50,14 +56,19 @@ router.post("/login", async (req, res) => {
     const token = generateToken({ id: user._id, role: user.role });
 
     // Set JWT token in cookies
-    res.cookie("authtoken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000, // 1 hour
-      sameSite: "strict",
-    });
+    // res.cookie("authtoken", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   maxAge: 3600000, // 1 hour
+    //   sameSite: "strict",
+    // });
+    res.header("Acess-Control-Expose-Header", "Authorization");
+    res.header("Authorization", `Bearer ${token}`);
 
-    res.json({ message: "User logged in successfully", user: { id: user._id, role: user.role } });
+    res.json({
+      message: "User logged in successfully",
+      user: { id: user._id, role: user.role },
+    });
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ message: "Internal server error" });

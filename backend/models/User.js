@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" }, // Added role field
+ 
+
 });
 
 // Hash password before saving
@@ -21,3 +23,5 @@ userSchema.methods.matchPassword = async function (password) {
 };
 
 export default mongoose.model("User", userSchema);
+
+// https://gng-resumes.s3.ap-south-1.amazonaws.com/production-resumes/753b0b48-26c3-40e5-bb69-0fa024f4f73f/753b0b48-26c3-40e5-bb69-0fa024f4f73f.pdf
