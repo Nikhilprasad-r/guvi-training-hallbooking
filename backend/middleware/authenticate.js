@@ -1,6 +1,5 @@
 import { verifyToken } from "../utils/jwt.js";
-import User from "../models/User.js";
-import connectDB from "../utils/connectDB.js";
+ import User from "../models/mysql/User.js";
 
 // Protect middleware
 const protect = async (req, res, next) => {
@@ -11,9 +10,11 @@ const protect = async (req, res, next) => {
 
   try {
     // Verify the token
+    
     const decoded = verifyToken(token);
     req.user = decoded.id;
-    const user = await User.findById(req.user.id);
+    // const user = await User.findById(req.user.id);
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
