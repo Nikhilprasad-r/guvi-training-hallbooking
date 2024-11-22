@@ -1,7 +1,8 @@
 import express from "express";
-import User from "../models/User.js";
+// import User from "../models/User.js";
+import User from "../models/mysql/User.js";
 import { generateToken } from "../utils/jwt.js";
-
+import bcrypt from "bcryptjs";
 const router = express.Router();
 
 // Register a new user
@@ -10,14 +11,27 @@ router.post("/register", async (req, res) => {
 
   try {
     // Check if user already exists
-    const userExists = await User.findOne({ username });
+    // const userExists = await User.findOne({ username });
+    const userExists = await User.findOne({
+      where: {
+        username: username,
+      },
+    });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     // Create a new user
-    const user = new User({ username, password, role });
-    await user.save();
+    // const user = new User({ username, password, role });
+
+    // await user.save();
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({
+      username,
+      password: encryptedPassword,
+      role,
+    });
 
     const token = generateToken({ id: user._id, role: user.role });
 
@@ -29,7 +43,10 @@ router.post("/register", async (req, res) => {
       sameSite: "strict",
     });
 
-    res.status(201).json({ message: "User registered successfully", user: { id: user._id, role: user.role } });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: { id: user._id, role: user.role },
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -42,7 +59,13 @@ router.post("/login", async (req, res) => {
 
   try {
     // Find the user
-    const user = await User.findOne({ username });
+    // const user = await User.findOne({ username });
+    const user = await User.findOne({
+      where: {
+        username: username,
+      },
+    });
+
     if (!user || !(await user.matchPassword(password))) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
@@ -57,7 +80,10 @@ router.post("/login", async (req, res) => {
       sameSite: "strict",
     });
 
-    res.json({ message: "User logged in successfully", user: { id: user._id, role: user.role } });
+    res.json({
+      message: "User logged in successfully",
+      user: { id: user._id, role: user.role },
+    });
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ message: "Internal server error" });
