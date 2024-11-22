@@ -14,15 +14,15 @@ const staticPath = path.resolve("public");
 connectMysqlDb();
 
 const app = express();
-const server = http.createServer(app); // Create an HTTP server for Express and Socket.IO
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Adjust origin for your setup
+    origin: "*", 
     methods: ["GET", "POST"],
   },
 });
 
-// Attach the Socket.IO logic
+
 setupSocket(io);
 
 app.use("/static", express.static(staticPath));
