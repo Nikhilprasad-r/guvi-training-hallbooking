@@ -4,10 +4,9 @@ import { io } from "socket.io-client";
 const backend = import.meta.env.VITE_BACKEND;
 const socket = io(backend);
 
-const Messaging = () => {
+const Messaging = ({sender}) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [sender, setSender] = useState(""); // New state for sender
   const [receiver, setReceiver] = useState(""); // New state for receiver
 
   // Listen for incoming messages from the server
@@ -56,13 +55,7 @@ const Messaging = () => {
           ))}
         </ul>
         <form onSubmit={sendMessage} className="flex flex-col gap-2">
-          <input
-            type="text"
-            value={sender}
-            onChange={(e) => setSender(e.target.value)}
-            placeholder="Your name"
-            className="px-4 py-2 border border-gray-300 rounded-lg"
-          />
+       
           <input
             type="text"
             value={receiver}
