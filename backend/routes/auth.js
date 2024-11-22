@@ -3,6 +3,7 @@ import express from "express";
 import User from "../models/mysql/User.js";
 import { generateToken } from "../utils/jwt.js";
 import bcrypt from "bcryptjs";
+import { matchPassword } from "../tools/matchPassword.js";
 const router = express.Router();
 
 // Register a new user
@@ -45,7 +46,7 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      user: { id: user._id, role: user.role },
+      user: { id: user._id, role: user.role.toLowerCase() },
     });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -65,8 +66,8 @@ router.post("/login", async (req, res) => {
         username: username,
       },
     });
-
-    if (!user || !(await user.matchPassword(password))) {
+console.log(user)
+    if (!user || !(await matchPassword(password,user.password))) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
@@ -82,7 +83,7 @@ router.post("/login", async (req, res) => {
 
     res.json({
       message: "User logged in successfully",
-      user: { id: user._id, role: user.role },
+      user: { id: user._id, role: user.role.toLowerCase() },
     });
   } catch (error) {
     console.error("Error logging in user:", error);

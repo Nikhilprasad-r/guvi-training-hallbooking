@@ -1,56 +1,84 @@
 import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+import Messaging from "./components/Messaging";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
   const [role, setRole] = useState("user");
 
   // Callback functions to handle login and register success
   const handleLoginSuccess = (user) => {
     setIsAuthenticated(true);
-    setRole(user.role)
+    setRole(user.role);
   };
+
   const handleRegisterSuccess = (user) => {
     setIsAuthenticated(true);
-    setRole(user.role)
+    setRole(user.role);
   };
 
-  // Toggle between Login and Register forms
-  const toggleAuthForm = () => setShowLogin((prev) => !prev);
-
   return (
-    <div className="container mx-auto p-4">
-      {isAuthenticated ? (
-        <Dashboard role={role} /> // Show the dashboard if authenticated
-      ) : (
-        <div className="auth-container">
-          {showLogin ? (
-            <>
-              <Login onLogin={handleLoginSuccess} />
-              <p>
-                Don&apos;t have an account?{" "}
-                <button onClick={toggleAuthForm} className="text-blue-500">
-                  Register here
-                </button>
-              </p>
-            </>
-          ) : (
-            <>
-              <Register onRegister={handleRegisterSuccess} />
-              <p>
-                Already have an account?{" "}
-                <button onClick={toggleAuthForm} className="text-blue-500">
-                  Login here
-                </button>
-              </p>
-            </>
-          )}
-        </div>
-      )}
-    </div>
+    <Router>
+      <div className="container mx-auto p-4">
+        <Routes>
+          {/* Define routes for Login, Register, and Dashboard */}
+          <Route
+            path="/login"
+            element={
+              !isAuthenticated ? (
+                <Login onLogin={handleLoginSuccess} />
+              ) : (
+                <Dashboard role={role} />
+              )
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              !isAuthenticated ? (
+                <Register onRegister={handleRegisterSuccess} />
+              ) : (
+                <Dashboard role={role} />
+              )
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={isAuthenticated ? <Dashboard role={role} /> : <Login onLogin={handleLoginSuccess} />}
+          />
+          <Route
+            path="/socket"
+            element={<Messaging/>}/>
+          {/* Default route */}
+          <Route
+            path="/"
+            element={
+              !isAuthenticated ? (
+                <Login onLogin={handleLoginSuccess} />
+              ) : (
+                <Dashboard role={role} />
+              )
+            }
+          />
+        </Routes>
+
+        {/* Links for navigating between Login, Register, and Dashboard */}
+        {!isAuthenticated && (
+          <div className="auth-container">
+            <Link to="/login" className="text-blue-500">
+              Login here
+            </Link>
+            <span> | </span>
+            <Link to="/register" className="text-blue-500">
+              Register here
+            </Link>
+          </div>
+        )}
+      </div>
+    </Router>
   );
 }
 

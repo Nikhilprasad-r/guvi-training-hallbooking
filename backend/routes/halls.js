@@ -4,6 +4,7 @@ import Hall from "../models/mysql/Hall.js";
 import Booking from "../models/mysql/Booking.js";
 import protect from "../middleware/authenticate.js";
 import authorize from "../middleware/authorize.js";
+import { Op } from "sequelize";
 
 // Get all halls with populated bookings
 hallRoutes.get("/halls/:pageNumber/:itemsPerPage", async (req, res) => {
