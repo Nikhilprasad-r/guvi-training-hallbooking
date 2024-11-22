@@ -8,16 +8,19 @@ import Messaging from "./components/Messaging";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState("user");
+  const [user, setUser] = useState("");
 
   // Callback functions to handle login and register success
   const handleLoginSuccess = (user) => {
     setIsAuthenticated(true);
     setRole(user.role);
+    setUser(user.username);
   };
 
   const handleRegisterSuccess = (user) => {
     setIsAuthenticated(true);
     setRole(user.role);
+    setUser(user.username);
   };
 
   return (
@@ -47,11 +50,24 @@ function App() {
           />
           <Route
             path="/dashboard"
-            element={isAuthenticated ? <Dashboard role={role} /> : <Login onLogin={handleLoginSuccess} />}
+            element={
+              isAuthenticated ? (
+                <Dashboard role={role} />
+              ) : (
+                <Login onLogin={handleLoginSuccess} />
+              )
+            }
           />
           <Route
-            path="/socket"
-            element={<Messaging/>}/>
+            path="/messaging"
+            element={
+              isAuthenticated ? (
+                <Messaging sender={user} />
+              ) : (
+                <Login onLogin={handleLoginSuccess} />
+              )
+            }
+          />
           {/* Default route */}
           <Route
             path="/"

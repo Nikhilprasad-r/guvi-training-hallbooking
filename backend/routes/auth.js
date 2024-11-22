@@ -46,7 +46,11 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      user: { id: user._id, role: user.role.toLowerCase() },
+      user: {
+        username: user.username,
+        id: user._id,
+        role: user.role.toLowerCase(),
+      },
     });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -66,8 +70,8 @@ router.post("/login", async (req, res) => {
         username: username,
       },
     });
-console.log(user)
-    if (!user || !(await matchPassword(password,user.password))) {
+    console.log(user);
+    if (!user || !(await matchPassword(password, user.password))) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
@@ -83,7 +87,11 @@ console.log(user)
 
     res.json({
       message: "User logged in successfully",
-      user: { id: user._id, role: user.role.toLowerCase() },
+      user: {
+        username: user.username,
+        id: user._id,
+        role: user.role.toLowerCase(),
+      },
     });
   } catch (error) {
     console.error("Error logging in user:", error);
